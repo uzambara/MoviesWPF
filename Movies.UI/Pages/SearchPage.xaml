@@ -1,0 +1,94 @@
+﻿<Page x:Class="Movies.UI.Pages.SearchPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Movies.UI" xmlns:converters="clr-namespace:Movies.UI.Converters"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="SearchPage">
+    <Page.Resources>
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="{x:Type DataGridColumnHeader}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <converters:FavoriteImageConverter x:Key="FavoriteImageConverter"/>
+    </Page.Resources>
+    <Grid>
+        <TextBox x:Name="SearchInput" Margin="26,31,235,0" Text="{Binding SearchInput}" TextWrapping="Wrap" VerticalAlignment="Top" Height="20" Padding="10,0,10,0" VerticalContentAlignment="Center" FontFamily="Comic Sans MS"/>
+        <Button x:Name="SearchButton" Content="Search" HorizontalAlignment="Right" Margin="0,31,147,0" VerticalAlignment="Top" Width="68" FontFamily="Comic Sans MS"/>
+        <Button x:Name="GoToFavoriteButton" Content="Go To Favorite" HorizontalAlignment="Right" Margin="0,31,26,0" VerticalAlignment="Top" Width="99" FontFamily="Comic Sans MS"/>
+
+        <DataGrid
+            x:Name="MoviesDataGrid"
+            Margin="26,66,26,25"
+            ItemsSource="{Binding Path=Movies}"
+            AutoGenerateColumns="False"
+            HorizontalContentAlignment="Stretch"
+            ColumnWidth="*"
+            ScrollViewer.CanContentScroll="False"
+            FontFamily="Comic Sans MS"
+            CanUserAddRows="False"
+        >
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Title">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label  Content="{Binding Title}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Runtime">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label  Content="{Binding Runtime}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Year">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label  Content="{Binding Year}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Photo" Width="120">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding Poster}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Genre">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label  Content="{Binding Genre}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Writer">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label  Content="{Binding Writer}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Favorite" Width="120">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Click="AddToFavorite" Uid="{Binding ExternalId}" Background="White">
+                                <Image Source="{Binding IsFavorite, Converter={StaticResource FavoriteImageConverter}}" Width="50" Height="50"/>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Label FontFamily="Comic Sans MS" FontWeight="Bold" Content="Type movie title on English..." HorizontalAlignment="Left" Margin="21,0,0,0" VerticalAlignment="Top"/>
+    </Grid>
+</Page>

@@ -1,0 +1,16 @@
+# IDE/Tools specific
+.vs/
+.vscode/
+.idea/
+*.user
+
+# Packages
+**/packages/*
+!**/packages/build/
+node_modules/
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
