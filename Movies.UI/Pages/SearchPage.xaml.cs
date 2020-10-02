@@ -38,6 +38,26 @@ namespace Movies.UI.Pages
             SearchButton.Click += SearchButton_Click;
         }
 
+        private async void MoviesDataGrid_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            var isScrolledToBottom = e.VerticalOffset + e.ViewportHeight >= e.ExtentHeight;
+            var isScrolled = e.VerticalChange > 0;
+            if (isScrolled && isScrolledToBottom)
+            {
+                try
+                {
+                    Loader.StartLoading();
+                    SearchButton.IsEnabled = false;
+                    await _searchPageViewModel.LoadMore();
+                }
+                finally
+                {
+                    Loader.FinishLoading();
+                    SearchButton.IsEnabled = true;
+                }
+            }
+        }
+
         private async void SearchButton_Click(object sender, RoutedEventArgs e)
         {
             try

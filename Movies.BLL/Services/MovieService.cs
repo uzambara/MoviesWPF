@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Movies.Abstractions;
 using Movies.Abstractions.Models;
 using  Movies.Abstractions.Services;
 using Movies.DAL.Data.Domain;
@@ -25,14 +26,15 @@ namespace Movies.BLL.Services
         public async Task<List<Movie>> GetMoviesByNameAsync(string name)
         {
             var movies = await _movieApiClient.GetMoviesByNameAsync(name);
-            var favoriteMovies = await GetFavoriteMoviesAsync();
-            var query =
-                from movie in movies
-                join favoriteMovie in favoriteMovies on movie.ExternalId equals favoriteMovie.ExternalId
-                select movie;
-            query.ToList().ForEach(movie => movie.IsFavorite = true);
-
+            movies = await MarkIfFavorite(movies);
             return movies;
+        }
+
+        public async Task<Pageable<Movie>> GetPageableMoviesByNameAsync(string name, int pageNumber)
+        {
+            var result = await _movieApiClient.GetPageableMoviesByNameAsync(name, pageNumber);
+            result.Data = await MarkIfFavorite(result.Data);
+            return result;
         }
 
         public async Task<List<Movie>> GetFavoriteMoviesAsync()
@@ -64,6 +66,18 @@ namespace Movies.BLL.Services
             movieEntity.IsFavorite = true;
             _movieRepository.Add(movieEntity);
             await _movieRepository.SaveChangesAsync();
+        }
+
+        private async Task<List<Movie>> MarkIfFavorite(List<Movie> movies)
+        {
+            var favoriteMovies = await GetFavoriteMoviesAsync();
+            var query =
+                from movie in movies
+                join favoriteMovie in favoriteMovies on movie.ExternalId equals favoriteMovie.ExternalId
+                select movie;
+            query.ToList().ForEach(movie => movie.IsFavorite = true);
+
+            return movies;
         }
     }
 }

@@ -26,10 +26,11 @@
 
         <DataGrid
             x:Name="MoviesDataGrid"
-            Margin="26,66,26,25"
+            Margin="26,91,26,25"
             ItemsSource="{Binding Path=Movies}"
             AutoGenerateColumns="False"
             HorizontalContentAlignment="Stretch"
+            ScrollViewer.ScrollChanged="MoviesDataGrid_ScrollChanged"
             ColumnWidth="*"
             ScrollViewer.CanContentScroll="False"
             FontFamily="Comic Sans MS"
@@ -90,5 +91,6 @@
             </DataGrid.Columns>
         </DataGrid>
         <Label FontFamily="Comic Sans MS" FontWeight="Bold" Content="Type movie title on English..." HorizontalAlignment="Left" Margin="21,0,0,0" VerticalAlignment="Top"/>
+        <Label FontFamily="Comic Sans MS" FontWeight="Bold" Content="{Binding FoundedMoviesCountText}" HorizontalAlignment="Left" Margin="26,60,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Page>

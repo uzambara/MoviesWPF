@@ -6,21 +6,24 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Movies.Abstractions;
 using Movies.UI.Events;
 
 namespace Movies.UI.VewModels
 {
     public class SearchPageViewModel : ViewModelBase
     {
+        private static object _syncObject = "";
         private string _searchInput;
+        private string _foundedMoviesCountText;
         private List<Movie> _movies = new List<Movie>();
-        private readonly IMapper _mapper;
+        private Pageable<Movie> _pageableMovies = new Pageable<Movie>();
         private readonly IMovieService _movieService;
 
-        public SearchPageViewModel(IMovieService movieService, IMapper mapper, IEventManager eventManager)
+        public SearchPageViewModel(IMovieService movieService, IEventManager eventManager)
         {
-            _mapper = mapper;
             _movieService = movieService;
             Movies = GetMoviesData().Result;
 
@@ -43,6 +46,15 @@ namespace Movies.UI.VewModels
                 OnPropertyChanged("SearchInput");
             }
         }
+        public string FoundedMoviesCountText
+        {
+            get => _foundedMoviesCountText;
+            set
+            {
+                _foundedMoviesCountText = value;
+                OnPropertyChanged("FoundedMoviesCountText");
+            }
+        }
 
         public List<Movie> Movies
         {
@@ -56,7 +68,29 @@ namespace Movies.UI.VewModels
 
         public async Task SearchMovies()
         {
-            Movies = await _movieService.GetMoviesByNameAsync(_searchInput);
+            if (Monitor.TryEnter(_syncObject))
+            {
+                _pageableMovies = await _movieService.GetPageableMoviesByNameAsync(_searchInput, 1);
+                FoundedMoviesCountText = $"Фильмов {_pageableMovies.Data.Count} из {_pageableMovies.TotalCount}.";
+                Movies = _pageableMovies.Data;
+            }
+        }
+
+        public async Task LoadMore()
+        {
+            if (Monitor.TryEnter(_syncObject))
+            {
+                if (_pageableMovies.HasMore)
+                {
+                    _pageableMovies = await _movieService.GetPageableMoviesByNameAsync(_searchInput, _pageableMovies.PageNumber + 1);
+                    if (_pageableMovies.Data.Count > 0)
+                    {
+                        Movies.AddRange(_pageableMovies.Data);
+                        Movies = Movies.ToList();
+                        FoundedMoviesCountText = $"Фильмов {Movies.Count} из {_pageableMovies.TotalCount}.";
+                    }
+                }
+            }
         }
 
         public async void ToggleMovieFavorite(string externalId)
