@@ -71,7 +71,7 @@ namespace Movies.UI.VewModels
             if (Monitor.TryEnter(_syncObject))
             {
                 _pageableMovies = await _movieService.GetPageableMoviesByNameAsync(_searchInput, 1);
-                FoundedMoviesCountText = $"Фильмов {_pageableMovies.Data.Count} из {_pageableMovies.TotalCount}.";
+                FoundedMoviesCountText = $"Films: {_pageableMovies.Data.Count} of {_pageableMovies.TotalCount}.";
                 Movies = _pageableMovies.Data;
             }
         }
@@ -87,7 +87,7 @@ namespace Movies.UI.VewModels
                     {
                         Movies.AddRange(_pageableMovies.Data);
                         Movies = Movies.ToList();
-                        FoundedMoviesCountText = $"Фильмов {Movies.Count} из {_pageableMovies.TotalCount}.";
+                        FoundedMoviesCountText = $"Films: {Movies.Count} of {_pageableMovies.TotalCount}.";
                     }
                 }
             }

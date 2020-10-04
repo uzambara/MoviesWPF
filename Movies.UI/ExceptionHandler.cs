@@ -22,7 +22,7 @@ namespace Movies.UI
             switch (exception.ErrorCode)
             {
                 case ErrorCode.RemoteApiRequestError:
-                    MessageBox.Show("Во время получения данных произошла ошибка, попробуйте повторить попытку позже.");
+                    MessageBox.Show("An error occurred while receiving data, please try again later.");
                     break;
                 case ErrorCode.RemoteApiNotFoundMovies:
                     MessageBox.Show(exception.Message);
@@ -34,7 +34,7 @@ namespace Movies.UI
 
         private void ShowUnknownUnhandledExceptionMessage()
         {
-            MessageBox.Show("Произошла ошибка. Обратитесь к администратору системы.");
+            MessageBox.Show("An error has occurred. Contact your system administrator.");
         }
     }
 }

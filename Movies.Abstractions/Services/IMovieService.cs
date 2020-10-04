@@ -6,7 +6,6 @@ namespace Movies.Abstractions.Services
 {
     public interface IMovieService
     {
-        Task<List<Movie>> GetMoviesByNameAsync(string name);
         Task<Pageable<Movie>> GetPageableMoviesByNameAsync(string name, int pageNumber);
         Task<List<Movie>> GetFavoriteMoviesAsync();
         Task RemoveFromFavorite(int id);

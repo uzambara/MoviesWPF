@@ -23,13 +23,6 @@ namespace Movies.BLL.Services
             _mapper = mapper;
         }
 
-        public async Task<List<Movie>> GetMoviesByNameAsync(string name)
-        {
-            var movies = await _movieApiClient.GetMoviesByNameAsync(name);
-            movies = await MarkIfFavorite(movies);
-            return movies;
-        }
-
         public async Task<Pageable<Movie>> GetPageableMoviesByNameAsync(string name, int pageNumber)
         {
             var result = await _movieApiClient.GetPageableMoviesByNameAsync(name, pageNumber);
